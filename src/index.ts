@@ -10,25 +10,28 @@ class Scraper {
     products: {}[];
     minQuery: number;
     maxQuery: number;
-    maximumPrice: number;
+    maximumPossiblePrice: number;
     constructor(minPrice: number, maxPrice: number) {
-        this.maximumPrice = maxPrice;
+        this.maximumPossiblePrice = maxPrice;
         this.products = [];
         this.minQuery = minPrice;
         this.maxQuery = maxPrice;
     }
     async getProducts() {
         while (this.minQuery !== this.maxQuery) {
+            //reach out to the api using a method that calls axios get request
             const response = await this.getResponse(this.minQuery, this.maxQuery)
             //If get response resulted in error, i determine if i want to try again or no.
             if (response.error) {
                 let {error} = response
                 if(error.status > 500){
+                    //if the error status code is 5**, its a server error so i try again
                     let message = `Request failed with status code:${error.status}, message:${error.message}, TRYING AGAIN.`
                     console.log(message);
                     continue
                 } else{
-                    let message = `Request failed with status code:${error.status}, message:${error.message}, ABANDONING.`
+                    // if error isnt 500 its a user error so i dont retry and abort.
+                    let message = `Request failed with status code:${error.status}, message:${error.message}, ABORTING SCRAPE.`
                     console.log(message)
                     return
                 }
@@ -64,7 +67,10 @@ class Scraper {
     }
     //This method takes the existing minQuery and maxQuery price range and sets it to half.
     getNewMax() {
-        let newMax = Math.floor((this.maxQuery - this.minQuery) / 2)
+        //calculate new price range by spliting the current price range
+        let newPriceRange = Math.floor((this.maxQuery - this.minQuery) / 2)
+        //get the value for new max price query, and se it
+        let newMax = this.minQuery + newPriceRange 
         this.maxQuery = newMax
     }
 
@@ -73,7 +79,7 @@ class Scraper {
     //and start with the maxQuery at maximumPrice. 
     getNewMin() {
         this.minQuery = this.maxQuery
-        this.maxQuery = this.maximumPrice
+        this.maxQuery = this.maximumPossiblePrice
     }
     // A method that makes Axios call to the api, it either returns data or an error.
     async getResponse(minQuery: number, maxQuery: number) {
@@ -98,5 +104,7 @@ class Scraper {
         }
     }
 }
+
+const scraper = new Scraper(0, 100000)
 
 
