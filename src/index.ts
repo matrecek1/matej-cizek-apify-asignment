@@ -22,8 +22,15 @@ class Scraper {
             const response = await this.getResponse(this.minQuery, this.maxQuery)
             //If get response resulted in error, i determine if i want to try again or no.
             if (response.error) {
-                switch(response.error.status){
-                    
+                let {error} = response
+                if(error.status > 500){
+                    let message = `Request failed with status code:${error.status}, message:${error.message}, TRYING AGAIN.`
+                    console.log(message);
+                    continue
+                } else{
+                    let message = `Request failed with status code:${error.status}, message:${error.message}, ABANDONING.`
+                    console.log(message)
+                    return
                 }
             }
 
@@ -53,6 +60,7 @@ class Scraper {
             }
 
         }
+        console.log("Scraping done.")
     }
     //This method takes the existing minQuery and maxQuery price range and sets it to half.
     getNewMax() {
