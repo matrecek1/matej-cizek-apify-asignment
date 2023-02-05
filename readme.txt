@@ -6,3 +6,4 @@ Answer: My code relies on the expectation that there arent more than 1000 produc
         the while loop that in the first cycle when minPrice is 0 and max is 100000 i would get the total number of all products in the api, store it and 
         then markj the scrape as complete when the scraped products length would equal to total number of products in the api.
 NOTE: if would have more time I would make some Jest tests to test the algorhitm and the core logic. But I think its outside of this asignment description.
+NOTE: the error handling section should be more detailed.
