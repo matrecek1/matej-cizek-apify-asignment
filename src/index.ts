@@ -7,6 +7,7 @@ interface ResponseData {
 
 
 class Scraper {
+    maximumProductsPerRequest: 1000;
     products: {}[];
     minQuery: number;
     maxQuery: number;
@@ -16,6 +17,7 @@ class Scraper {
         this.products = [];
         this.minQuery = minPrice;
         this.maxQuery = maxPrice;
+        this.maximumProductsPerRequest = 1000
     }
     async getProducts() {
         while (this.minQuery !== this.maxQuery) {
@@ -50,15 +52,15 @@ class Scraper {
 
             //Here if total is > 1000, i know that i need to make the price range smaller
             // so i run the getNewMax method (explained below) and restart the loop.
-            if (res.total > 1000) {
+            if (res.total > this.maximumProductsPerRequest) {
                 this.getNewMax()
                 continue
             }
 
             //If total is <= 1000, i know that i can extract the products, getNewMin
-            if (res.total <= 1000) {
+            if (res.total <= this.maximumProductsPerRequest) {
                 this.products.push(res.products)
-                this.getNewMin
+                this.getNewMin()
                 continue
             }
 
@@ -105,6 +107,6 @@ class Scraper {
     }
 }
 
-const scraper = new Scraper(0, 100000)
+//const scraper = new Scraper(0, 100000)
 
 
