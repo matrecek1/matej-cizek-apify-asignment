@@ -36,7 +36,7 @@ export class Scraper {
     // this does the scraping
     async scrapeProducts(): Promise<ScrapeReport> {
         while (true) {
-            // 
+            // If min Query equals maximum price we know that all items have been scraped
             if (this.minQuery == this.maximumPossiblePrice) {
                 console.log("Scrape completed!");
                 return {
