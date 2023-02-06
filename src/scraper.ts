@@ -54,6 +54,7 @@ export class Scraper {
                     console.log(message);
                     continue
                 } else {
+                    //Here if error isnt retriable i end the scrape
                     const message = `Request failed with status:${response.error.status}, message:${response.error.message}, ABORTING`
                     console.log(message);
                     return {
@@ -154,6 +155,6 @@ export class Scraper {
         }
     }
 }
-//const scraper = new Scraper(0, 100000)
+
 
 
